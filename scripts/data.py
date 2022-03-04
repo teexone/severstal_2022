@@ -2,7 +2,7 @@ import pandas as pd
 import datetime as dt
 from scripts.permanent.permanent import *
 
-def refine(path: str) -> pd.DataFrame:
+def refine(path: str, drop=True) -> pd.DataFrame:
     '''
     # Summary
 
@@ -21,7 +21,8 @@ def refine(path: str) -> pd.DataFrame:
     '''
     # Reads the file explicitly given in path variable
     data = pd.read_excel(path)
-    data = data.dropna()
+    if drop:
+        data = data.dropna(subset=[arrival_date_column, order_date_column])
     data[arrival_date_column] = data[arrival_date_column].apply(lambda field: pd.to_datetime(field, infer_datetime_format=True)).dropna
     data[order_date_column] = data[order_date_column].apply(lambda field: pd.to_datetime(field, infer_datetime_format=True))
     return data
