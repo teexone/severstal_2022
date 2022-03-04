@@ -1,6 +1,6 @@
 import pandas as pd
 import datetime as dt
-from permanent.permanent import *
+from scripts.permanent.permanent import *
 
 def refine(path: str) -> pd.DataFrame:
     '''
@@ -21,10 +21,9 @@ def refine(path: str) -> pd.DataFrame:
     '''
     # Reads the file explicitly given in path variable
     data = pd.read_excel(path)
-    data[arrival_date_column] = data[arrival_date_column].apply(lambda field: pd.to_datetime(field)).dropna
-    data[arrival_date_column].dropna()
-    data[order_date_column] = data[order_date_column].apply(lambda field: pd.to_datetime(field))
-    data[order_date_column].dropna()
+    data = data.dropna()
+    data[arrival_date_column] = data[arrival_date_column].apply(lambda field: pd.to_datetime(field, infer_datetime_format=True)).dropna
+    data[order_date_column] = data[order_date_column].apply(lambda field: pd.to_datetime(field, infer_datetime_format=True))
     return data
 
 # If the script launched on top-level with argument -d <file-path>

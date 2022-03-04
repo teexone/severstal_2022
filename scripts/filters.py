@@ -1,4 +1,4 @@
-from permanent.permanent import *
+from scripts.permanent.permanent import *
 import pandas as pd
 
 def by_name(source: pd.DataFrame, name: str, columns: list[str]|None=None) -> pd.DataFrame: 
@@ -11,14 +11,14 @@ def by_name(source: pd.DataFrame, name: str, columns: list[str]|None=None) -> pd
     # Args:
         
     - source:  `pandas.DataFrame` -- The source data to filter
-    - name: `str`  -- The name of the product 
+    - name: `str` -- The name of the product 
     - columns: `list of strings or None` -- The columns to preserve
 
     # Returns
 
     Filtered data as `pandas.DataFrame`
     '''
-    pre = source[source[product_name_column] == name]
+    pre = source[source[product_name_column] == name].copy()
     return pre if columns is None else pre.loc[:, columns]
 
 
@@ -40,9 +40,5 @@ def by_order_price(source: pd.DataFrame, lbound: int, rbound: int, columns: list
 
     Filtered data as `pandas.DataFrame`
     '''
-    pre = source[(source[order_price_column] <= rbound) & (lbound <= source[order_price_column])]
+    pre = source[(source[order_price_column] <= rbound) & (lbound <= source[order_price_column])].copy()
     return pre if columns is None else pre.loc[:, columns]
-
-if __name__ == '__main__':
-    data = pd.read_excel('data/severstal/datamon.xlsx')
-    print(by_order_price(data, 1500, 2000, [product_name_column, order_price_column]))
