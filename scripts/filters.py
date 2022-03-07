@@ -1,7 +1,8 @@
+
 from scripts.permanent.permanent import *
 import pandas as pd
 
-def by_name(source: pd.DataFrame, name: str, columns: list[str]|None=None) -> pd.DataFrame: 
+def by_name(source: pd.DataFrame, name: str, columns) -> pd.DataFrame:
     '''
     # Summary:
 
@@ -22,7 +23,7 @@ def by_name(source: pd.DataFrame, name: str, columns: list[str]|None=None) -> pd
     return pre if columns is None else pre.loc[:, columns]
 
 
-def by_order_price(source: pd.DataFrame, lbound: int, rbound: int, columns: list[str]|None=None) -> pd.DataFrame: 
+def by_order_price(source: pd.DataFrame, lbound: int, rbound: int, columns) -> pd.DataFrame:
     '''
     # Summary:
 
