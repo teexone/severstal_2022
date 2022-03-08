@@ -1,25 +1,18 @@
 import pandas as pd
-import datetime as dt
 from scripts.permanent.permanent import *
-from scripts.filters import by_name
+
 
 def refine(path: str, drop=True) -> pd.DataFrame:
-    '''
-    # Summary
+    """
+    Reads the source data and apply the following refinements:
+        1.  Reshape ill-formed date fields
+        2.  Drop all records with N/A dates
 
-    Reads the source data and apply the following finements:
-    
-    1.  Reshape ill-formed date fields
-    2.  Drop all records with N/A dates
+    :param path: The path to the source file
+    :param drop: Whether to drop bad records or not
+    :return:  Refined data as pandas.DataFrame
+    """
 
-    # Args
-
-       - path: str - Path to the source file
-
-    # Returns:
-       
-        Refined data as pandas.DataFrame
-    '''
     # Reads the file explicitly given in path variable
     data = pd.read_excel(path)
     if drop:
@@ -29,15 +22,23 @@ def refine(path: str, drop=True) -> pd.DataFrame:
     return data
 
 
-def get_prices_indices(dt: pd.DataFrame, product: str):
-    x = by_name(dt, product, columns=[order_price_column, order_date_column]).to_numpy()
-    return dict((_[1], float(_[0] / x[0][0]),) for _ in x)
-
-
-# If the script launched on top-level with argument -d <file-path>
-# then it will produce refined XLSX file in directory ./temp/<file-path>
-if __name__ == '__main__': 
-    import sys
-    if len(sys.argv) >= 3:
-        if sys.argv[1] == '-d':
-            refine('data/severstal/datamon.xlsx').to_excel(f'.temp/{sys.argv[2]}')
+def dictate(dt: pd.DataFrame, key: str, value: str, agg=lambda x: sum(x) / len(x)):
+    """
+    Returns the dictionary constructed from the data in the following manner:
+    The keys are the `key` column and values are the values for this key
+    :param dt: The source data frame
+    :param key: The column for 'keys' in the dict
+    :param value: The column for 'values' in the dict
+    :param agg: Aggregator function will be applied of the arrays of the values if their keys coincided
+    :return:
+    """
+    split = dt.loc[:, [key, value]].to_dict('split')['data']
+    d = dict()
+    for _ in split:
+        if _[0] not in d:
+            d[_[0]] = [_[1]]
+        else:
+            d[_[0]].append(_[1])
+    for _ in d.keys():
+        d[_] = sum(d[_]) / len(d[_])
+    return d

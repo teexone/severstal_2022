@@ -1,21 +1,23 @@
 import datetime
+from scripts.external import get_data, Indices, merge_flattened_indices, sieve
 
-from scripts.data import refine, get_prices_indices
+from scripts.data import refine, dictate
 from scripts.filters import *
 from scripts.permanent.permanent import *
-from scripts.app_format.date import from_external_date
-from scripts.external import get_data, Indices
-from scripts.app.calculate import predict_price
-import pandas as pd
-import itertools as it
-import numpy as np
-import matplotlib.pyplot as plt
-import scripts.predictions.price_predictions
+from scripts.app_format.date import date_to_int
+from scripts.predictions.prices import PricePredictor
+from scripts.predictions.indices import predict_all_indices
 
-top = [_[0] for _ in pd.read_excel('data/severstal/toplist.xlsx').to_numpy()]
-data = refine('data/severstal/datamon.xlsx').sort_values(order_date_column)
-prices = get_prices_indices(data, top[0])
-external = list(get_data(Indices.steel))
-pr = scripts.predictions.price_predictions.predict('СОВОК 1085.02.00СБ', datetime.date(year=2002, month=7, day=21))
-# print(external)
-# predict_price(prices, external)
+
+def calculate(product: str, date: datetime.date, include_indices: list, method: str):
+    data = refine('data/severstal/datamon.xlsx').sort_values(order_date_column)
+    search_data = by_name(data, product, [order_price_column, order_date_column])
+    search_data.sort_values(by=[order_date_column])
+    search_data[order_date_column] = search_data[order_date_column].apply(lambda x: date_to_int(x.date()))
+    dictated = dictate(search_data, order_date_column, order_price_column)
+    sieved = sieve(merge_flattened_indices(Indices.steel, Indices.gas), dictated.keys())
+    X = [sieved[_] for _ in dictated.keys()]
+    y = [dictated[_] for _ in sorted(dictated.keys())]
+    predicted_indices = sum([predict_all_indices(get_data(_), date_to_int(date), 'exponential') for _ in [Indices.steel, Indices.gas]], [])
+    model = PricePredictor(X, y)
+    return model.predict(predicted_indices)
