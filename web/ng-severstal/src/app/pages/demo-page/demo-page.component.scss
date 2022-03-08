@@ -107,7 +107,6 @@ $header-size: 5vh;
 }
 
 .item_select-choice {
-
   width: 100%!important;
 }
 
@@ -123,20 +122,33 @@ $header-size: 5vh;
   background-color: $primary-neutral;
   font-family: "Source Sans Pro", sans-serif;
 }
-
-.input-btn-process {
+.input-btn-export{
   padding: 10px;
-  // border: 3px solid desaturate(lighten($primary-accent, 40), 30);
-  background:  lighten($primary-accent, 20);
-  color: $primary-neutral;
-  -webkit-box-shadow: 0px -6px 26px -15px rgba(0, 0, 0, 0.5) inset;
-  -moz-box-shadow: 0px -6px 26px -15px rgba(0, 0, 0, 0.5) inset;
-  box-shadow: 0px -6px 26px -15px rgba(0, 0, 0, 0.5) inset;
-
+  background:  lighten($primary-neutral, 20);
+  color: $primary-accent;
   font-weight: bold;
   border-radius: 10px;
   text-align: center;
-
+  border: 1px solid lighten($primary-accent,10);
+}
+.input-btn-export:hover{
+  background:  lighten($secondary-neutral, 20);
+  color: lighten($primary-accent, 20);
+  border-color: lighten($primary-accent,20);
+}
+.input-btn-process {
+  padding: 10px;
+  //  border: 3px solid desaturate(lighten($primary-accent, 40), 30);
+  background:  lighten($primary-accent, 20);
+  color: $primary-neutral;
+  margin-right: 10px;
+  font-weight: bold;
+  border-radius: 10px;
+  text-align: center;
+}
+.input-btn-process:hover{
+  background: $secondary-accent;
+  box-shadow: none;
 }
 
 .input-btn-container {
