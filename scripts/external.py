@@ -15,8 +15,8 @@ class Indices:
     metal = 'Sheet metal'
     profiles = 'Profiles'
     rails = 'Rails wheels'
-    machines = "Machines"
-    vehicles = "Vehicle"
+    machines = 'Machines'
+    vehicles = 'Vehicle'
 
 
 xlsx = pd.ExcelFile('data/external/indices.xlsx')
@@ -27,7 +27,6 @@ def get_data(index: str):
     for i in range(1, len(dt.index) + 1, 2):
         rt.append([])
         listed_data = list(dt.iloc[i, 2:].to_dict().items())
-        print(listed_data)
         for i in range(len(listed_data) - 1):
             k, v = listed_data[i]
             next_v = listed_data[i + 1][1]
@@ -36,5 +35,4 @@ def get_data(index: str):
             while it.days != 365:
                 rt[-1].append((t + it, v + it.days / 365 * (next_v - v)))
                 it = it + timedelta(days=1)
-            print(it)
     return rt

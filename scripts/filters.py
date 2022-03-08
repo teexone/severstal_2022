@@ -2,7 +2,7 @@
 from scripts.permanent.permanent import *
 import pandas as pd
 
-def by_name(source: pd.DataFrame, name: str, columns) -> pd.DataFrame:
+def by_name(source: pd.DataFrame, name: str, columns: list[str]) -> pd.DataFrame:
     '''
     # Summary:
 
