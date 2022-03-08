@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {DatepickerOptions} from "ngx-dates-picker";
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {DataService} from "../../services/data.service";
+import {FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-demo-page',
@@ -18,11 +21,29 @@ export class DemoPageComponent implements OnInit {
   };
 
   productName: string = "хуй";
+
   date: Date = new Date();
-  products: string[] = [
-    "Вал",
-    "хуй"
+  products!: string[];
+  currentMethod: string = "Линейная";
+  methods: string[] = [
+    "Линейная",
+    "Квадратичная",
+    "Кубическая",
+    "Экспоненциальная",
+    "С наименьшей LSE"
   ]
+  resources: string[] = [
+    "Сталь",
+    "Бензин",
+    "Дизель",
+    "Станки",
+    "Автотранспорт",
+    "Железная руда",
+    "Стальной прокат",
+    "Стальные профили",
+    "Цельнокатаные колёса"
+  ]
+
   __datePickerOptions: DatepickerOptions = {
     minDate: new Date(new Date().getFullYear(), new Date().getMonth()),
     maxDate: new Date(2099, 0),
@@ -32,10 +53,10 @@ export class DemoPageComponent implements OnInit {
   }
   __initialized = false;
 
-  constructor() {
-
+  constructor(public data: DataService) {
+      this.data.getTop().then(body => this.products = body.toplist);
   }
-
+  
   ngAfterViewInit() {
     this.__initialized = true;
   }
@@ -51,6 +72,6 @@ export class DemoPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  }
 
+  }
 }
