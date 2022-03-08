@@ -1,0 +1,43 @@
+<section class="demo-header primary-neutral-bg"></section>
+<section class="demo-page primary-accent-bg">
+  <div class="demo-page-main">
+    <div class="demo-page-display">
+      <div class="demo-page-plot">
+        <plotly-plot [data]="graph.data" [layout]="graph.layout">
+
+        </plotly-plot>
+      </div>
+      <div class="demo-page-control">
+        <div class="demo-page-control-item_select">
+          <label class="item_select-text">
+            Выберите продукт
+          </label>
+          <form>
+            <ng-select name="products_select"
+                       [items]="products"
+                       [(ngModel)]="productName"
+                       class="item_select-choice">
+            </ng-select>
+          </form>
+        </div>
+        <div class="demo-page-control-inputs">
+          <div>
+            <p class="item_select-text" style="margin: 0">
+              Рассчитать на:
+            </p>
+            <ngx-dates-picker [(ngModel)]="date" [options]="__datePickerOptions"></ngx-dates-picker>
+          </div>
+          <div class="input-btn-container">
+            <div class="input-btn-process">Рассчитать</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-page-result">
+      <img src="assets/mascot.svg" class="demo-page-result-mascot">
+      <p class="demo-page-result-text">
+        Для продукта {{productName}} цена в следующем месяце будет от 10000 рублей до 12000 рублей.
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,145 @@
+@import "src/app/colors";
+
+$header-size: 5vh;
+
+.demo-header {
+  width: 100vw;
+  height: 7.5vh;
+
+  background: #F2F2F2;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px -31px 79px -29px rgba(0, 0, 0, 0.25);
+}
+
+.demo-page {
+  height: 92.5vh;
+  width: 100vw;
+  background: radial-gradient(50% 50% at 50% 50%, #0062EF 0%, #0033AB 48.75%, #001378 100%);
+  display: flex;
+
+
+  align-items: center;
+  align-content: space-between;
+  justify-content: center;
+
+  .demo-page-main {
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    align-items: center;
+    justify-content: center;
+
+    & > * {
+      margin: 0 15px 0 15px ;
+    }
+
+  }
+
+  .demo-page-display {
+
+    height: 60vh;
+    width: 75vw;
+
+    display: flex;
+    & > * {
+      margin: 0 15px 0 15px ;
+    }
+
+    flex-grow: 1;
+
+    .demo-page-control {
+      width: 37%;
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .demo-page-control-item_select {
+        padding: 15px;
+        background-color: $primary-neutral;
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+      }
+      .demo-page-control-inputs {
+        height: 65%;
+        background-color: $primary-neutral;
+        border-radius: 18px;
+        font-family: "Source Sans Pro", sans-serif;
+        z-index: 100;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+    }
+    .demo-page-plot {
+      width: 67%;
+      background-color: $primary-neutral;
+    }
+
+  }
+
+  .demo-page-result {
+    position: relative;
+    height: 10vh;
+    width: 55vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $primary-neutral;
+    margin-top: 25px!important;
+
+    font-family: "Source Sans Pro", sans-serif;
+
+    img {
+      transform: translate(-40%, -55%) scale(.6, .6);
+      position: absolute;
+      top: 8px;
+      left: 15px;
+    }
+
+    .demo-page-result-text {
+      margin-left: 50px;
+      font-size: 1em;
+
+    }
+  }
+}
+
+.item_select-choice {
+
+  width: 100%!important;
+}
+
+.item_select-text {
+  margin-bottom: 5px!important;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.item_select-choice {
+  width: 90%;
+  height: 30%;
+  border-style: none;
+  background-color: $primary-neutral;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.input-btn-process {
+  padding: 10px;
+  // border: 3px solid desaturate(lighten($primary-accent, 40), 30);
+  background:  lighten($primary-accent, 20);
+  color: $primary-neutral;
+  -webkit-box-shadow: 0px -6px 26px -15px rgba(0, 0, 0, 0.5) inset;
+  -moz-box-shadow: 0px -6px 26px -15px rgba(0, 0, 0, 0.5) inset;
+  box-shadow: 0px -6px 26px -15px rgba(0, 0, 0, 0.5) inset;
+
+  font-weight: bold;
+  border-radius: 10px;
+  text-align: center;
+
+}
+
+.input-btn-container {
+  display: flex;
+  justify-content: flex-end;
+}
