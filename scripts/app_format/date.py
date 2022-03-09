@@ -1,3 +1,4 @@
+import datetime
 from datetime import date
 
 
@@ -26,3 +27,7 @@ def date_to_int(dt: date):
     :return: int representation of the date
     """
     return (dt - base).days
+
+
+def int_to_date(i: int):
+    return base + datetime.timedelta(days=i)

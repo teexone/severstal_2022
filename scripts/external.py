@@ -71,7 +71,7 @@ def get_flattened_indices(index: str):
     return fl
 
 
-def merge_flattened_indices(*indices):
+def merge_flattened_indices(indices):
     """
     Merges the arrays of the flattened indices
 
