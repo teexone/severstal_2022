@@ -23,6 +23,7 @@
     "@ng-select/ng-select": "^8.1.1",
     "@swimlane/ngx-charts": "^20.1.0",
     "angular-plotly.js": "^4.0.4",
+    "express": "^4.17.3",
     "ngx-dates-picker": "^9.0.2",
     "plotly.js-dist-min": "^2.10.0",
     "rxjs": "~6.6.0",

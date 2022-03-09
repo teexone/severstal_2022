@@ -3,11 +3,21 @@
 $header-size: 5vh;
 
 .demo-header {
+  position: relative;
   width: 100vw;
   height: 7.5vh;
-
   background: #F2F2F2;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px -31px 79px -29px rgba(0, 0, 0, 0.25);
+
+  img {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    height: 7vh;
+    width: 10vw;
+    z-index: 10;
+    top: 3.75vh;
+    left: 200px;
+    }
 }
 
 .demo-page {
@@ -36,7 +46,7 @@ $header-size: 5vh;
 
   .demo-page-display {
 
-    height: 60vh;
+    height: 70vh;
     width: 75vw;
 
     display: flex;
@@ -78,6 +88,29 @@ $header-size: 5vh;
     .demo-page-plot {
       width: 67%;
       background-color: $primary-neutral;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .demo-page-plot-indices {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        width: 100%;
+        height: 50%;
+      }
+      .demo-page-plot-price {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        width: 100%;
+        height: 50%;
+      }
     }
 
   }
@@ -102,9 +135,9 @@ $header-size: 5vh;
     }
 
     .demo-page-result-text {
-      margin-left: 50px;
+      margin-left: 95px;
       font-size: 1em;
-
+      text-align: center;
     }
   }
 }
@@ -183,7 +216,7 @@ mat-checkbox {
   margin-right: 27px;
   font-family: "Source Sans Pro", sans-serif;
   font-size: 1em;
-  z-index: -10;
+  z-index: 0;
 }
 .method-select-text{
   border: 10px;
@@ -200,4 +233,15 @@ mat-checkbox {
 
 ::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background {
   background-color: lighten($primary-accent, 20) !important;
+}
+
+.input-resources {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: auto auto;
+  transition: all 1s ease-in-out;
+}
+
+.datepick {
+  font-size: 0.8em;
 }

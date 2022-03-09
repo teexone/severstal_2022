@@ -1,12 +1,15 @@
+import time
 from datetime import datetime
+from io import BytesIO
+
 from scripts.app.main import calculate as calc
-from flask import Flask, request
+from flask import Flask, request, send_file
 import pandas as pd
 from scripts.data import dictate, refine
 from scripts.filters import by_name
 from scripts.permanent.permanent import *
 from scripts.app_format.date import int_to_date
-from scripts.external import get_data, Indices
+from scripts.external import get_data, Indices, get_indices, get_inverted_indices
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -17,19 +20,7 @@ data = refine('data/severstal/datamon.xlsx')
 
 @app.route('/indices')
 def indices():
-    return {
-        'indices': {
-            'Бензин': Indices.gas,
-            'Сталь': Indices.steel,
-            'Стальной прокат': Indices.metal,
-            'Дизель': Indices.disel,
-            'Автотранспорт': Indices.vehicles,
-            'Станки':  Indices.machines,
-            'Стальные профили': Indices.profiles,
-            'Цельнокатаные колёса': Indices.rails,
-            'Железная руда': Indices.ore,
-        }
-    }, 200
+    return {'indices': get_indices()}, 200
 
 
 @app.route("/top")
@@ -47,14 +38,20 @@ def plot():
         df = by_name(data, product, columns=[order_date_column, order_price_column])
         dct = dictate(df, order_date_column, order_price_column)
         return {
-            'x': list(dct.keys()),
-            'y': list(dct.values())
+            'x': list(map(lambda x: x.timestamp(), dct.keys())),
+            'y': list(dct.values()),
+            'name': "Цена товара"
         }, 200
     elif what == 'index':
         index = request.args.get('index')
         arr = get_data(index)
         keys = [[int_to_date(_[0]) for _ in x] for x in arr]
-        return {'x': keys, 'y': [list(_[1] for _ in x) for x in arr]}, 200
+        values = [list(_[1] for _ in x) for x in arr]
+        x = list(map(lambda x: time.mktime(x.timetuple()), keys[0]))
+        y = []
+        for i in range(len(values[0])):
+            y.append(sum([values[j][i] for j in range(len(values))]) / len(values))
+        return {'x': x, 'y': y}, 200
 
 
 @app.route('/calculate')
@@ -62,15 +59,25 @@ def calculate():
     indices = request.args.getlist('include')
     method = request.args.get('method')
     product = request.args.get('product')
-    date = request.args.get('date')
-    print(indices)
-    if indices is None or method is None or product is None or date is None:
-        return '', 400
+    date = int(request.args.get('date'))
+    to_excel = bool(request.args.get('to_excel'))
     try:
-        date = datetime.fromisoformat(date).date()
+        date = datetime.fromtimestamp(date / 1000).date()
     except ValueError:
         return 'cannot parse ISO format for date', 400
-    return {'predicted': calc(product, date, indices, method)[0]}, 200
+
+    if to_excel:
+        df = calc(product, date, indices, method, return_steps=True)
+        o = BytesIO()
+        writer = pd.ExcelWriter(o)
+        df.to_excel(writer, sheet_name='Prediction')
+        writer.save()
+        o.seek(0)
+        return send_file(o, download_name=f'PredictionOutput_{date}', as_attachment=True), 200
+    if indices is None or method is None or product is None or date is None:
+        return '', 400
+    result, error = calc(product, date, indices, method)
+    return {'predicted': result[0], 'error': error}, 200
 
 
 if __name__ == '__main__':

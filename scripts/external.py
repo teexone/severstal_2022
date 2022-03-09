@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import timedelta
+from datetime import timedelta, date
 
 import pandas as pd
 import numpy as np
@@ -41,6 +41,7 @@ def get_data(index: str):
     for i in range(1, len(dt.index) + 1, 2):
         rt.append([])
         listed_data = list(dt.iloc[i, 2:].to_dict().items())
+        last = None
         for i in range(len(listed_data) - 1):
             k, v = listed_data[i]
             nk, nv = listed_data[i + 1]
@@ -51,7 +52,11 @@ def get_data(index: str):
             it = timedelta(days=0)
             while it.days != m_delta:
                 rt[-1].append((dateformat.date_to_int(t + it), int((v + (nv - v) * it.days / m_delta) * 10) / 10))
+                last = t + it
                 it = it + timedelta(days=1)
+        while last < date.today():
+            rt[-1].append((dateformat.date_to_int(last), rt[-1][-1][1]))
+            last += timedelta(days=1)
     return rt
 
 
@@ -98,3 +103,22 @@ def sieve(indices, dates):
         if len(indices[_]) > 0:
             rt[_] = indices[_]
     return rt
+
+
+def get_indices():
+    return {
+            'Бензин': Indices.gas,
+            'Сталь': Indices.steel,
+            'Стальной прокат': Indices.metal,
+            'Дизель': Indices.disel,
+            'Автотранспорт': Indices.vehicles,
+            'Станки': Indices.machines,
+            'Стальные профили': Indices.profiles,
+            'Цельнокатаные колёса': Indices.rails,
+            'Железная руда': Indices.ore,
+    }
+
+
+def get_inverted_indices():
+    return {v: k for k, v in get_indices().items()}
+
