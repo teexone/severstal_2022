@@ -29,7 +29,7 @@ $header-size: 5vh;
     justify-content: center;
 
     & > * {
-      margin: 0 15px 0 15px ;
+      margin: 0 15px 0 15px;
     }
 
   }
@@ -40,8 +40,9 @@ $header-size: 5vh;
     width: 75vw;
 
     display: flex;
+
     & > * {
-      margin: 0 15px 0 15px ;
+      margin: 0 15px 0 15px;
     }
 
     flex-grow: 1;
@@ -60,8 +61,9 @@ $header-size: 5vh;
         display: flex;
         flex-direction: column;
       }
+
       .demo-page-control-inputs {
-        height: 65%;
+        height: 75%;
         background-color: $primary-neutral;
         border-radius: 18px;
         font-family: "Source Sans Pro", sans-serif;
@@ -72,6 +74,7 @@ $header-size: 5vh;
         justify-content: space-between;
       }
     }
+
     .demo-page-plot {
       width: 67%;
       background-color: $primary-neutral;
@@ -87,7 +90,7 @@ $header-size: 5vh;
     align-items: center;
     justify-content: center;
     background-color: $primary-neutral;
-    margin-top: 25px!important;
+    margin-top: 25px !important;
 
     font-family: "Source Sans Pro", sans-serif;
 
@@ -107,11 +110,11 @@ $header-size: 5vh;
 }
 
 .item_select-choice {
-  width: 100%!important;
+  width: 100% !important;
 }
 
 .item_select-text {
-  margin-bottom: 5px!important;
+  margin-bottom: 5px !important;
   font-family: "Source Sans Pro", sans-serif;
 }
 
@@ -122,31 +125,50 @@ $header-size: 5vh;
   background-color: $primary-neutral;
   font-family: "Source Sans Pro", sans-serif;
 }
-.input-btn-export{
+
+.ngx-dates-picker-calendar-container{
+  position: absolute;
+  width: 300px;
+  background: #fff;
+  box-shadow: 0 1px 4px 0 rgb(0 0 0 / 8%);
+  border: 1px solid #dfe3e9;
+  border-radius: 4px;
+  z-index: 25!important;
+}
+
+.input-btn-export {
+  cursor: default;
   padding: 10px;
-  background:  lighten($primary-neutral, 20);
+  background: lighten($primary-neutral, 20);
   color: $primary-accent;
   font-weight: bold;
   border-radius: 10px;
   text-align: center;
-  border: 1px solid lighten($primary-accent,10);
+  border: 1px solid lighten($primary-accent, 10);
 }
-.input-btn-export:hover{
-  background:  lighten($secondary-neutral, 20);
+
+.input-btn-export:hover {
+  background: lighten($secondary-neutral, 20);
   color: lighten($primary-accent, 20);
-  border-color: lighten($primary-accent,20);
+  border-color: lighten($primary-accent, 20);
 }
+
 .input-btn-process {
+  cursor: default;
   padding: 10px;
   //  border: 3px solid desaturate(lighten($primary-accent, 40), 30);
-  background:  lighten($primary-accent, 20);
+  background: lighten($primary-accent, 20);
   color: $primary-neutral;
   margin-right: 10px;
   font-weight: bold;
+  -webkit-box-shadow: 0px -6px 26px -15px rgba(0, 0, 0, 0.5) inset;
+  -moz-box-shadow: 0px -6px 26px -15px rgba(0, 0, 0, 0.5) inset;
+  box-shadow: 0px -6px 26px -15px rgba(0, 0, 0, 0.5) inset;
   border-radius: 10px;
   text-align: center;
 }
-.input-btn-process:hover{
+
+.input-btn-process:hover {
   background: $secondary-accent;
   box-shadow: none;
 }
@@ -154,4 +176,28 @@ $header-size: 5vh;
 .input-btn-container {
   display: flex;
   justify-content: flex-end;
+}
+
+mat-checkbox {
+  color: $primary-accent;
+  margin-right: 27px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 1em;
+  z-index: 0;
+}
+.method-select-text{
+  border: 10px;
+}
+
+//Checkbox color
+::ng-deep .mat-checkbox-ripple .mat-ripple-element {
+  background-color: lighten($primary-accent, 10) !important;
+}
+
+::ng-deep .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: $primary-accent !important;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background-color: lighten($primary-accent, 20) !important;
 }

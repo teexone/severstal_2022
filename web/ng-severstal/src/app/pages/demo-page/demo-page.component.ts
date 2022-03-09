@@ -20,7 +20,7 @@ export class DemoPageComponent implements OnInit {
     layout: {title: 'A Fancy Plot'}
   };
 
-  productName: string = "хуй";
+  productName: string = "Колесо 3519.05.02.006";
 
   date: Date = new Date();
   products!: string[];
@@ -56,7 +56,7 @@ export class DemoPageComponent implements OnInit {
   constructor(public data: DataService) {
       this.data.getTop().then(body => this.products = body.toplist);
   }
-  
+
   ngAfterViewInit() {
     this.__initialized = true;
   }

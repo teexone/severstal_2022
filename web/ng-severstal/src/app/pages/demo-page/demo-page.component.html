@@ -1,4 +1,5 @@
-<section class="demo-header primary-neutral-bg"></section>
+<section class="demo-header primary-neutral-bg" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+         xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"></section>
 <section class="demo-page primary-accent-bg">
   <div class="demo-page-main">
     <div class="demo-page-display">
@@ -21,15 +22,27 @@
           </form>
         </div>
         <div class="demo-page-control-inputs">
-          <div>
+          <div >
             <p class="item_select-text" style="margin: 0">
               Рассчитать на:
             </p>
+            <div class="datepick">
             <ngx-dates-picker [(ngModel)]="date" [options]="__datePickerOptions"></ngx-dates-picker>
+            </div>
+            <label class="method-select-text">
+              Выберите метод регрессии:
+            </label>
+            <ng-select name="method_select"
+                       [items]="methods"
+                       [(ngModel)]="currentMethod"
+                       class="method-select"></ng-select>
+            <div class="input-resources">
+              <mat-checkbox *ngFor="let r of resources">{{r}}</mat-checkbox>
+            </div>
           </div>
           <div class="input-btn-container">
             <div class="input-btn-process">Рассчитать</div>
-            <div class = "input-btn-export">Экспортировать в .xlsx</div>
+            <div class="input-btn-export">Экспортировать в .xlsx</div>
           </div>
         </div>
       </div>
