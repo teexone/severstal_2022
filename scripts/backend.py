@@ -1,21 +1,20 @@
 import time
 from datetime import datetime
 from io import BytesIO
-
-from scripts.app.main import calculate as calc
+from main import calculate as calc
 from flask import Flask, request, send_file
 import pandas as pd
-from scripts.data import dictate, refine
-from scripts.filters import by_name
-from scripts.permanent.permanent import *
-from scripts.app_format.date import int_to_date
-from scripts.external import get_data, Indices, get_indices, get_inverted_indices
+from data import dictate, refine
+from filters import by_name
+from appformat.date import int_to_date
+from external import get_data, get_indices
+from permanent.permanent import order_date_column, order_price_column
 from flask_cors import CORS
 
 app = Flask(__name__)
 cors = CORS(app)
 
-data = refine('data/severstal/datamon.xlsx')
+data = refine('../data/severstal/datamon.xlsx')
 
 
 @app.route('/indices')

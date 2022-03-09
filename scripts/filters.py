@@ -1,8 +1,8 @@
-from scripts.permanent.permanent import *
+from permanent import *
 import pandas as pd
 
 
-def by_name(source: pd.DataFrame, name: str, columns: list[str]) -> pd.DataFrame:
+def by_name(source: pd.DataFrame, name: str, columns: list) -> pd.DataFrame:
     """
     Retrieves all the fields with product name being equal to the passed name argument.
     Optionally (if `columns` is not None) drops all the columns not specified by the argument

@@ -1,5 +1,5 @@
 import pandas as pd
-from scripts.permanent.permanent import *
+from permanent.permanent import *
 
 
 def refine(path: str, drop=True) -> pd.DataFrame:

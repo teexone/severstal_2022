@@ -2,10 +2,7 @@ from collections import defaultdict
 from datetime import timedelta, date
 
 import pandas as pd
-import numpy as np
-from enum import Enum
-import matplotlib.pyplot as plt
-import scripts.app_format.date as dateformat
+import appformat.date as dateformat
 
 
 class Indices:
@@ -23,7 +20,7 @@ class Indices:
     vehicles = 'Vehicle'
 
 
-xlsx = pd.ExcelFile('data/external/indices.xlsx')
+xlsx = pd.ExcelFile('../data/external/indices.xlsx')
 
 
 def get_data(index: str):

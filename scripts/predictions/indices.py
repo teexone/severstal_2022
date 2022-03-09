@@ -24,7 +24,7 @@ def predict_all_indices(indices: list, date: int, method: str):
     Produces predictions for all the indices categories
 
     :param indices: Indices data through years (list of index data)
-    :param date: The date to predict
+    :param date: The date to predictions
     :param method: The prediction method
     :return: The array of the predicted intervals for each of the given index
     """
@@ -39,7 +39,7 @@ def predict_indices(data: list, date: int, method: str):
     -- Exponential regression
 
     :param data: Index data through time
-    :param date: The date to predict at
+    :param date: The date to predictions at
     :param method: Which method to use
     :return: Predicted index
     """
@@ -61,8 +61,8 @@ def predict_indices_linear(t, i_t, date: int) -> IndexPredictionResult:
 
     :param t: The time array
     :param i_t: Known values of indices for time entries
-    :param date: The date to predict the value at
-    :return: The predict value as IndexPredictionResult
+    :param date: The date to predictions the value at
+    :return: The predictions value as IndexPredictionResult
     """
     slope, intercept, r, p, std_err = stats.linregress(t, i_t)
 
@@ -77,9 +77,9 @@ def predict_indices_polynomial(t, i_t,  date: int, degree: int) -> IndexPredicti
 
     :param t: The time array
     :param i_t: Known values of indices for time entries
-    :param date: The date to predict the value at
+    :param date: The date to predictions the value at
     :param degree: The degree of the polynomial approximation
-    :return: The predict value as IndexPredictionResult
+    :return: The predictions value as IndexPredictionResult
     """
     model = np.poly1d(np.polyfit(t, i_t, degree))
     return IndexPredictionResult(predicted=model(date), r2=r2_score(i_t, model(t)))
@@ -91,8 +91,8 @@ def predict_indices_exponential(t, i_t, date: int) -> IndexPredictionResult:
 
     :param t: The time array
     :param i_t: Known values of indices for time entries
-    :param date: The date to predict the value at
-    :return: The predict value as IndexPredictionResult
+    :param date: The date to predictions the value at
+    :return: The predictions value as IndexPredictionResult
     """
     fit = np.polyfit(t, np.log(i_t), 1)
 

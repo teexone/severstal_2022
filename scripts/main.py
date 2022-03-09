@@ -1,14 +1,13 @@
 import datetime
 import numpy as np
-from scripts.external import get_data, Indices, merge_flattened_indices, sieve, get_flattened_indices, \
+from external import get_data, merge_flattened_indices, sieve, get_flattened_indices, \
     get_inverted_indices
 
-from scripts.data import refine, dictate
-from scripts.filters import *
-from scripts.permanent.permanent import *
-from scripts.app_format.date import date_to_int, int_to_date
-from scripts.predictions.prices import PricePredictor
-from scripts.predictions.indices import predict_all_indices
+from data import refine, dictate
+from filters import *
+from appformat.date import date_to_int, int_to_date
+from predictions.prices import PricePredictor
+from predictions.indices import predict_all_indices
 
 
 def calculate(product: str, date: datetime.date, include_indices: list, method: str, return_steps=False):
@@ -16,7 +15,7 @@ def calculate(product: str, date: datetime.date, include_indices: list, method: 
     The main function for the prediction of the price
 
     :param product The name of the product
-    :date date The date to predict at
+    :date date The date to predictions at
     :include_indices The indices to include into calculation (the available ones can be find in external.py)
     """
 
