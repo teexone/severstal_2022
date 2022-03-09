@@ -1,6 +1,3 @@
-import os
-print(os.environ['PYTHONPATH'])
-
 from datetime import datetime
 from scripts.app.main import calculate as calc
 from flask import Flask, request
@@ -9,10 +6,31 @@ from scripts.data import dictate, refine
 from scripts.filters import by_name
 from scripts.permanent.permanent import *
 from scripts.app_format.date import int_to_date
-from scripts.external import get_data
+from scripts.external import get_data, Indices
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
+
 data = refine('data/severstal/datamon.xlsx')
+
+
+@app.route('/indices')
+def indices():
+    return {
+        'indices': {
+            'Бензин': Indices.gas,
+            'Сталь': Indices.steel,
+            'Стальной прокат': Indices.metal,
+            'Дизель': Indices.disel,
+            'Автотранспорт': Indices.vehicles,
+            'Станки':  Indices.machines,
+            'Стальные профили': Indices.profiles,
+            'Цельнокатаные колёса': Indices.rails,
+            'Железная руда': Indices.ore,
+        }
+    }, 200
+
 
 @app.route("/top")
 def top():
@@ -37,8 +55,6 @@ def plot():
         arr = get_data(index)
         keys = [[int_to_date(_[0]) for _ in x] for x in arr]
         return {'x': keys, 'y': [list(_[1] for _ in x) for x in arr]}, 200
-
-
 
 
 @app.route('/calculate')
