@@ -17,6 +17,8 @@ def calculate(product: str, date: datetime.date, include_indices: list, method: 
     :param product The name of the product
     :date date The date to predictions at
     :include_indices The indices to include into calculation (the available ones can be find in external.py)
+    :method: The method to use: 'linear' | 'exponential' | 'quadratic' | 'cubic'
+    :return_steps: If True, returns the data frame to export to excel
     """
 
     data = refine('../data/severstal/datamon.xlsx').sort_values(order_date_column)
