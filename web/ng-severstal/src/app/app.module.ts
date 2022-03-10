@@ -5,7 +5,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {DemoPageComponent} from './pages/demo-page/demo-page.component';
-import {NgxDatesPickerModule} from "ngx-dates-picker";
 import {PlotlyModule} from "angular-plotly.js";
 import * as PlotlyJS from 'plotly.js-dist-min';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -28,7 +27,6 @@ PlotlyModule.plotlyjs = PlotlyJS;
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    NgxDatesPickerModule,
     PlotlyModule,
     NoopAnimationsModule,
     MatCheckboxModule,

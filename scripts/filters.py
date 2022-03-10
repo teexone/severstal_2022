@@ -1,4 +1,4 @@
-from permanent import *
+from permanent.permanent import *
 import pandas as pd
 
 

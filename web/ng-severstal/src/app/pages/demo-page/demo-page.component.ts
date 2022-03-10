@@ -1,5 +1,4 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {DatepickerOptions} from "ngx-dates-picker";
 import {DataService} from "../../services/data.service";
 import {FormGroup} from "@angular/forms";
 import {MatCheckboxChange} from "@angular/material/checkbox";
@@ -66,14 +65,6 @@ export class DemoPageComponent implements OnInit {
     return this.price ? Math.round(this.price) : undefined;
   }
   resources: { name: string, alias: string, active: boolean }[] = []
-
-  __datePickerOptions: DatepickerOptions = {
-    minDate: new Date(new Date().getFullYear(), new Date().getMonth()),
-    maxDate: new Date(2099, 0),
-    addStyle: {
-      'width': '100%'
-    }
-  }
   __initialized = false;
 
   constructor(public data: DataService) {

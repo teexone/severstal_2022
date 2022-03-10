@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 
-const static_address = "http://alobanov.space/"
+const static_address = "http://localhost:5000/"
 
 @Injectable({
   providedIn: 'root'

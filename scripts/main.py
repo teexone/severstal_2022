@@ -19,7 +19,7 @@ def calculate(product: str, date: datetime.date, include_indices: list, method: 
     :include_indices The indices to include into calculation (the available ones can be find in external.py)
     """
 
-    data = refine('data/severstal/datamon.xlsx').sort_values(order_date_column)
+    data = refine('../data/severstal/datamon.xlsx').sort_values(order_date_column)
     search_data = by_name(data, product, [order_price_column, order_date_column])
     search_data.sort_values(by=[order_date_column])
     search_data[order_date_column] = search_data[order_date_column].apply(lambda x: date_to_int(x.date()))

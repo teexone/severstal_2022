@@ -24,15 +24,14 @@
     "@swimlane/ngx-charts": "^20.1.0",
     "angular-plotly.js": "^4.0.4",
     "express": "^4.17.3",
-    "ngx-dates-picker": "^9.0.2",
     "plotly.js-dist-min": "^2.10.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^13.2.6",
-    "@angular/cli": "^13.2.6",
+    "@angular-devkit/build-angular": "^12.2.16",
+    "@angular/cli": "^12.2.16",
     "@angular/compiler-cli": "~12.2.0",
     "@types/jasmine": "~3.8.0",
     "@types/node": "^12.11.1",

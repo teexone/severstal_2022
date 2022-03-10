@@ -25,7 +25,7 @@ def indices():
 @app.route("/top")
 def top():
     return {
-        'toplist': [_[0] for _ in pd.read_excel('data/severstal/toplist.xlsx').to_numpy().tolist()]
+        'toplist': [_[0] for _ in pd.read_excel('../data/severstal/toplist.xlsx').to_numpy().tolist()]
         }, 200
 
 
@@ -72,7 +72,7 @@ def calculate():
         df.to_excel(writer, sheet_name='Prediction')
         writer.save()
         o.seek(0)
-        return send_file(o, download_name=f'PredictionOutput_{date}', as_attachment=True), 200
+        return send_file(o, attachment_filename=f'PredictionOutput_{date}', as_attachment=True), 200
     if indices is None or method is None or product is None or date is None:
         return '', 400
     result, error = calc(product, date, indices, method)
