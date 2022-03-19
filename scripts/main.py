@@ -29,4 +29,4 @@ def calculate(product: str, date: dt.date, include_indices: list):
     predicted = predictor.predict_price(date)
     print(f"From {int(predicted[0])} rubles up to {int(predicted[2])} rubles")
 
-calculate("Колесо 3519.05.02.006", dt.date.today(), [Indices.steel, Indices.vehicles], return_steps=True)
+calculate("Колесо 3519.05.02.006", dt.date.today(), [Indices.steel, Indices.vehicles])
