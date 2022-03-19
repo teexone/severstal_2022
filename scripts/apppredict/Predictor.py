@@ -1,6 +1,7 @@
 import datetime
 import math
 
+import scipy
 import sklearn.linear_model as skl
 import sklearn.metrics as skm
 import numpy as np
@@ -75,9 +76,10 @@ class PricePredictor:
 
         return exp, skm.r2_score(f_t, [exp(_) for _ in t])
 
-    def __predict_external__(self, date: datetime.date):
+    def __predict_external_sep__(self, date: datetime.date):
         result = []
         for module in self.__modules__:
+            result.append([])
             data = module.get_data()
             length = min(len(_) for _ in data.values())
             for i in range(length):
@@ -89,10 +91,17 @@ class PricePredictor:
                        ([date_to_int(_) for _ in data.keys()], [_[i] for _ in data.values()]),
                        PricePredictor.__cubic_regression__
                        ([date_to_int(_) for _ in data.keys()], [_[i] for _ in data.values()])]
-                print([_[1] for _ in arr])
+                time = [date_to_int(_) for _ in data.keys()]
+                tval = [_[i] for _ in data.values()]
                 func, r = max(arr, key=lambda x: x[1])
-                result.append(func(date_to_int(date)))
+                e = np.square(np.subtract(tval, [func(t) for t in time]))
+                el, er = np.sqrt(scipy.stats.t.interval(.95, len(e) - 1, loc=np.mean(e), scale=scipy.stats.sem(e)))
+                i = func(date_to_int(date))
+                result[-1].append((i - el, i, i + er,))
         return result
+
+    def __predict_external__(self, date: datetime.date):
+        return sum(self.__predict_external_sep__(date), [])
 
     def attach_parser(self, parser: ParserModule):
         """
@@ -117,4 +126,6 @@ class PricePredictor:
         """
         model = skl.LinearRegression()
         model.fit(self.__training_data__.X, self.__training_data__.y)
-        return model.predict([self.__predict_external__(date)])
+        external = self.__predict_external__(date)
+        return model.predict([[_[0] for _ in external]]), model.predict([[_[1] for _ in external]]), model.predict(
+            [[_[2] for _ in external]])

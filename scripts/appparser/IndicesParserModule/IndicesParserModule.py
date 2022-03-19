@@ -15,23 +15,27 @@ class IndicesParserModule(ParserModule):
         for i in range(header_columns_count, len(df.index)):
             self.__data__.append([])
             index_data = list(df.iloc[i, header_rows_count:].to_dict().items())
-            coefficient_data = [1]
+            coefficient_data = []
             _2020, last = None, None
             for j in range(1, len(index_data)):
                 k, v = index_data[j]
                 nk, nv = index_data[j - 1]
                 t, nt = dateformat.from_external_date(str(k)), dateformat.from_external_date(str(nk))
+                if t.year < 2016:
+                    continue
                 if t.year == 2020:
                     if _2020 is None:
                         _2020 = v
+                if len(coefficient_data) == 0:
+                    coefficient_data.append((t, 1))
+                    continue
                 if t.year == 2021:
-                    coefficient_data.append(int(coefficient_data[j - 1] * _2020) / 100)
+                    coefficient_data.append((t, int(coefficient_data[-1][1] * _2020) / 100))
                 else:
-                    coefficient_data.append(int(coefficient_data[j - 1] * nv) / 100)
+                    coefficient_data.append((t, int(coefficient_data[-1][1] * nv) / 100))
             for j in range(1, len(coefficient_data) - 1):
-                k, v = index_data[j - 1][0], coefficient_data[j]
-                nk, nv = index_data[j][0], coefficient_data[j]
-                t, nt = dateformat.from_external_date(str(k)), dateformat.from_external_date(str(nk))
+                t, v = coefficient_data[j - 1][0], coefficient_data[j - 1][1]
+                nt, nv = coefficient_data[j][0], coefficient_data[j][1]
                 if t.year < 2016:
                     continue
                 m_delta = (nt - t).days
