@@ -7,18 +7,30 @@ import datetime as dt
 
 from filters import by_name
 from data import refine
-from appformat.date import date_to_int
+from appformat.date import date_to_int, int_to_date
 from permanent.permanent import order_date_column, order_price_column
 from external import Indices
 
 external = "../data/external/indices.xlsx"
 
 
+def plot(x: list, y: list):
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    import random
+    save_dir = '../.temp'
+    print(x, y)
+    df = pd.DataFrame({
+        'Время': x, 'Цена, руб': y
+    })
+    print(df)
+    df.to_excel(save_dir + '/' + str(random.randint(0, 10**20)) + '.xlsx')
+
 def calculate(product: str, date: dt.date, include_indices: list):
     data = by_name(refine('../data/severstal/datamon.xlsx'),
                    product,
                    [order_date_column, order_price_column])
-    prices = [(date_to_int(k.date()), v) for k, v in data.to_numpy().tolist()]
+    prices = [(date_to_int(k.date()), v) for k, v in data.to_numpy().tolist()][:-1]
     parsers = [IndicesParserModule(external, i) for i in include_indices]
     data = parsers[0].get_data()
     for key, value in data.items():
@@ -27,6 +39,4 @@ def calculate(product: str, date: dt.date, include_indices: list):
     for parser in parsers:
         predictor.attach_parser(parser)
     predicted = predictor.predict_price(date)
-    print(f"From {int(predicted[0])} rubles up to {int(predicted[2])} rubles")
-
-calculate("Колесо 3519.05.02.006", dt.date.today(), [Indices.steel, Indices.vehicles], return_steps=True)
+    return predicted[0], predicted[2],
