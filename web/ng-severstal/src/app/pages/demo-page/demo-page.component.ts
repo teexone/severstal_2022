@@ -1,7 +1,7 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {DataService} from "../../services/data.service";
-import {FormGroup} from "@angular/forms";
 import {MatCheckboxChange} from "@angular/material/checkbox";
+import {PlotlyService} from "angular-plotly.js";
 
 @Component({
   selector: 'app-demo-page',
@@ -12,15 +12,16 @@ import {MatCheckboxChange} from "@angular/material/checkbox";
 
 export class DemoPageComponent implements OnInit {
 
-  @ViewChild('IndicesPlotContainer') indicesPlotContainer!: ElementRef;
-  @ViewChild('PricePlotContainer') pricesPlotContainer!: ElementRef;
-
+  __initialized = false;
+  capturedResources: { name: string, alias: string, active: boolean }[] = [];
+  currentMethod: string = "linear";
+  date: Date = new Date();
   indicesPlot: any = {
     data: [],
     layout: {
       showlegend: true,
       paper_bgcolor: '#F2F2F2FF',
-      plot_bgcolor:'#F2F2F2FF',
+      plot_bgcolor: '#F2F2F2FF',
       title: 'Динамика цен на другие товары',
       width: 500,
       height: 500,
@@ -29,7 +30,33 @@ export class DemoPageComponent implements OnInit {
       }
     }
   };
-
+  @ViewChild('IndicesPlotContainer') indicesPlotContainer!: ElementRef;
+  methods: { name: string, alias: string, id: number }[] = [
+    {name: "Линейная", alias: 'linear', id: 1},
+    {name: "Квадратичная", alias: 'quadratic', id: 2},
+    {name: "Кубическая", alias: 'cubic', id: 3},
+    {name: "Экспоненциальная", alias: 'exponential', id: 4},
+  ]
+  minDate = new Date();
+  price?: {
+    left: number,
+    right: number
+  };
+  priceLowerPlot = {
+    layout: {
+      type: 'line',
+      xref: 'paper',
+      x0: 0,
+      y0: 12.0,
+      x1: 1,
+      y1: 12.0,
+      line: {
+        color: 'rgb(255, 0, 0)',
+        width: 4,
+        dash: 'dot'
+      }
+    }
+  };
   pricePlot = {
     data: [] as any[],
     layout: {
@@ -38,60 +65,64 @@ export class DemoPageComponent implements OnInit {
       plot_bgcolor: '#F2F2F2FF',
       width: 500,
       height: 500,
+      datarevision: 0,
       margin: {
         t: 50
+      },
+      shapes: [{
+        type: 'rect',
+        xref: 'paper',
+        x0: 0,
+        y0: 12.0,
+        x1: 1,
+        y1: 12.0,
+        fillcolor: 'rgba(7, 99, 0, .5)',
+        line: {
+          color: 'rgba(7, 99, 0, .5)',
+          width: 1,
+        }
       }
+      ]
     }
   };
 
-  productName: string = "Колесо 3519.05.02.006";
-  minDate = new Date();
-  date: Date = new Date();
-  products!: string[];
-  capturedResources: { name: string, alias: string, active: boolean }[] = [];
-
-  methods: { name: string, alias: string, id: number }[] = [
-    {name: "Линейная", alias: 'linear', id: 1 },
-    {name: "Квадратичная", alias: 'quadratic', id: 2 },
-    {name: "Кубическая", alias: 'cubic', id: 3 },
-    {name: "Экспоненциальная", alias: 'exponential', id: 4 },
-  ]
-
-  currentMethod: string = "linear";
-  price?: number;
+  @ViewChild('PricePlotContainer') pricesPlotContainer!: ElementRef;
   probability?: number;
-
-  getPrice() {
-    return this.price ? Math.round(this.price) : undefined;
-  }
+  productName: string = "Колесо 3519.05.02.006";
+  products!: string[];
   resources: { name: string, alias: string, active: boolean }[] = []
-  __initialized = false;
 
-  constructor(public data: DataService) {
-      this.data.getTop().then(body => this.products = body.toplist);
-      this.data.getIndices().then(body => {
-        const indices = body.indices
-        for (let index in indices) {
-          this.resources.push({
-            name: index,
-            alias: indices[index],
-            active: false,
-          })
-        }
-      });
+  constructor(public data: DataService, public cd: ChangeDetectorRef, public plotly: PlotlyService) {
+    this.data.getTop().then(body => this.products = body.toplist);
+    this.data.getIndices().then(body => {
+      const indices = body.indices
+      for (let index in indices) {
+        this.resources.push({
+          name: index,
+          alias: indices[index],
+          active: false,
+        })
+      }
+    });
 
-  }
-  check($event: MatCheckboxChange, r: any) {
-    r.active = $event.checked
   }
 
   calculate() {
     this.data.calculate(this.productName, this.resources.filter(x => x.active).map(x => x.alias),
       this.currentMethod,
       this.date).then(x => {
-        this.probability = x.error;
-        this.price = x.predicted;
-      });
+      console.log('hello')
+      this.price = {
+        left: typeof x.left == 'number' ? x.left : parseInt(x.left),
+        right: typeof x.right == 'number' ? x.right : parseInt(x.right)
+      };
+      this.pricePlot.layout.shapes[0].y0 = this.price.left;
+      this.pricePlot.layout.shapes[0].y1 = this.price.right;
+      this.pricePlot = {...this.pricePlot};
+      this.cd.detectChanges();
+      this.pricePlot.layout.datarevision++;
+    });
+
     this.data.getDataPlot(this.productName).then(data => {
       data.x = data.x.map((i: any) => new Date(i * 1000))
       this.pricePlot.data = [data]
@@ -103,7 +134,7 @@ export class DemoPageComponent implements OnInit {
           this.indicesPlot.data.push({
             name: index.name,
             type: 'scatter',
-            mode: 'lines+points',
+            mode: 'points',
             x: data.x.map((i: any) => new Date(i * 1000)),
             y: data.y,
           })
@@ -112,9 +143,21 @@ export class DemoPageComponent implements OnInit {
     }
   }
 
+  check($event: MatCheckboxChange, r: any) {
+    r.active = $event.checked
+  }
+
   download() {
     this.data.downloadFile(this.productName, this.resources.filter(x => x.active).map(x => x.alias), this.currentMethod, this.date)
   }
+
+  getPrice() {
+    return {
+      left: Math.round(Math.min(this.price!.left, this.price!.right)),
+      right: Math.round(Math.max(this.price!.left, this.price!.right)),
+    };
+  }
+
   ngAfterViewInit() {
     this.__initialized = true;
   }

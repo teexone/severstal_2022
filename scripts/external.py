@@ -20,6 +20,19 @@ class Indices:
     vehicles = 'Vehicle'
 
 
+
+russian_indices = {
+    Indices.ore: 'Руда',
+    Indices.gas: 'Топливо',
+    Indices.disel: 'Дизель',
+    Indices.steel: 'Прокатная сталь',
+    Indices.metal: 'Железо и металлы',
+    Indices.profiles: 'Стальные профили',
+    Indices.rails: 'Железнодорожные перевозки',
+    Indices.machines: 'Производственные станки',
+    Indices.vehicles: 'Грузовые автомобили'
+}
+
 xlsx = pd.ExcelFile('../data/external/indices.xlsx')
 
 

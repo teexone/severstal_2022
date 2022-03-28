@@ -6,15 +6,19 @@ from flask import Flask, request, send_file
 import pandas as pd
 from data import dictate, refine
 from filters import by_name
-from appformat.date import int_to_date
 from external import get_data, get_indices
 from permanent.permanent import order_date_column, order_price_column
 from flask_cors import CORS
+
+from appparser.IndicesParserModule.IndicesParserModule import IndicesParserModule
+
+import numpy as np
 
 app = Flask(__name__)
 cors = CORS(app)
 
 data = refine('../data/severstal/datamon.xlsx')
+external = '../data/external/indices.xlsx'
 
 
 @app.route('/indices')
@@ -43,20 +47,16 @@ def plot():
         }, 200
     elif what == 'index':
         index = request.args.get('index')
-        arr = get_data(index)
-        keys = [[int_to_date(_[0]) for _ in x] for x in arr]
-        values = [list(_[1] for _ in x) for x in arr]
-        x = list(map(lambda x: time.mktime(x.timetuple()), keys[0]))
-        y = []
-        for i in range(len(values[0])):
-            y.append(sum([values[j][i] for j in range(len(values))]) / len(values))
-        return {'x': x, 'y': y}, 200
+        index = IndicesParserModule(external, index)
+        arr = index.get_data()
+        keys = list(map(lambda x: int(time.mktime(x.timetuple())), arr.keys()))
+        values = list(map(np.mean, arr.values()))
+        return {'x': keys, 'y': values}, 200
 
 
 @app.route('/calculate')
 def calculate():
     indices = request.args.getlist('include')
-    method = request.args.get('method')
     product = request.args.get('product')
     date = int(request.args.get('date'))
     to_excel = bool(request.args.get('to_excel'))
@@ -65,18 +65,17 @@ def calculate():
     except ValueError:
         return 'cannot parse ISO format for date', 400
 
+    p_l, p_r, df = calc(product, date, indices)
     if to_excel:
-        df = calc(product, date, indices, method, return_steps=True)
         o = BytesIO()
         writer = pd.ExcelWriter(o)
         df.to_excel(writer, sheet_name='Prediction')
         writer.save()
         o.seek(0)
         return send_file(o, attachment_filename=f'PredictionOutput_{date}', as_attachment=True), 200
-    if indices is None or method is None or product is None or date is None:
+    if indices is None or product is None or date is None:
         return '', 400
-    result, error = calc(product, date, indices, method)
-    return {'predicted': result[0], 'error': error}, 200
+    return {'left': float(p_l), 'right': float(p_r)}, 200
 
 
 if __name__ == '__main__':

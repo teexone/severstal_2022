@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 
-const static_address = "http://20.23.247.74:5000/"
+// const static_address = "http://20.23.247.74:5000/"
+const static_address = "http://localhost:5000/"
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +14,12 @@ export class DataService {
   }
 
   async calculate(name: string, indices: string[], method: string, date: Date) {
-    console.log(indices)
     return new Promise<{ [p: string]: any }>(((resolve, reject) => {
       this.http.get(static_address + "calculate", {
         params: {
           'product': name,
           'include': indices,
           'date': date.getTime(),
-          'method': method,
         }
       }).subscribe((data) => {
         resolve(data);

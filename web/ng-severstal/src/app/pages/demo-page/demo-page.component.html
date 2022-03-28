@@ -10,7 +10,7 @@
     <div class="demo-page-display">
       <div class="demo-page-plot">
         <div class="demo-page-plot-indices" #IndicesPlotContainer>
-          <plotly-plot [data]="indicesPlot.data" [layout]="indicesPlot.layout"></plotly-plot>
+          <plotly-plot [data]="indicesPlot.data" [revision]="pricePlot.layout.datarevision" [layout]="indicesPlot.layout"></plotly-plot>
         </div>
         <div class="demo-page-plot-price" #PricePlotContainer>
         <plotly-plot [data]="pricePlot.data" [layout]="pricePlot.layout"></plotly-plot>
@@ -43,7 +43,7 @@
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
             </div>
-            <label class="method-select-text">
+    <!--        <label class="method-select-text">
               Выберите метод регрессии:
             </label>
             <ng-select name="method_select"
@@ -52,7 +52,10 @@
                        bindValue="alias"
                        [(ngModel)]="currentMethod"
                        class="method-select">
-            </ng-select>
+            </ng-select>-->
+            <label class="method-select-text">
+              Выберите индексы для корреляции:
+            </label>
             <div class="input-resources">
               <mat-checkbox *ngFor="let r of resources" (change)="check($event, r)">{{r.name}}</mat-checkbox>
             </div>
@@ -67,9 +70,9 @@
     <div class="demo-page-result">
       <img src="assets/mascot.svg" class="demo-page-result-mascot">
       <p class="demo-page-result-text">
-        <ng-template [ngIf]="price && probability" [ngIfElse]="elsePrice">
-          Для продукта <i>{{productName}}</i> цена на {{date.toLocaleDateString('ru-RU')}} будет близка к
-          <b>{{getPrice()}}</b> рублей с вероятностью {{probability * 100 | number: '1.0-1'}}%
+        <ng-template [ngIf]="price" [ngIfElse]="elsePrice">
+          Для продукта <i>{{productName}}</i> цена на {{date.toLocaleDateString('ru-RU')}} c вероятностью
+          95% будет в промежутке от {{getPrice().left}} до {{getPrice().right}}
         </ng-template>
         <ng-template #elsePrice>
             Выберите параметры и продукты для рассчета!

@@ -11,22 +11,6 @@ from appparser.ParserModule import ParserModule
 from appformat.date import int_to_date, date_to_int
 
 
-class Predictor:
-    def __predict_linear__(self, time_array: list, data_array: list):
-        pass
-
-    def __predict_square__(self, time_array: list, data_array: list):
-        pass
-
-    def __predict_cubic__(self, time_array: list, data_array: list):
-        pass
-
-    def __predict_exp__(self, time_array: list, data_array: list):
-        pass
-
-    def predict(self, time_array: list, data_array: list):
-        pass
-
 
 class PricePredictor:
     class TrainingData:
@@ -39,7 +23,7 @@ class PricePredictor:
             self.X = data
             self.y = prices
 
-    def __init__(self, prices: [(datetime.time, float)]):
+    def __init__(self, prices: [(int, float)]):
         self.__training_data__ = PricePredictor.TrainingData([], [])
         self.__times__ = []
         self.__modules__: list[ParserModule] = []
@@ -86,11 +70,8 @@ class PricePredictor:
                 arr = [PricePredictor.__linear_regression__
                        ([date_to_int(_) for _ in data.keys()], [_[i] for _ in data.values()]),
                        PricePredictor.__quadratic_regression__
-                       ([date_to_int(_) for _ in data.keys()], [_[i] for _ in data.values()]),
-                       PricePredictor.__exponential_regression__
-                       ([date_to_int(_) for _ in data.keys()], [_[i] for _ in data.values()]),
-                       PricePredictor.__cubic_regression__
                        ([date_to_int(_) for _ in data.keys()], [_[i] for _ in data.values()])]
+
                 time = [date_to_int(_) for _ in data.keys()]
                 tval = [_[i] for _ in data.values()]
                 func, r = max(arr, key=lambda x: x[1])
@@ -127,5 +108,5 @@ class PricePredictor:
         model = skl.LinearRegression()
         model.fit(self.__training_data__.X, self.__training_data__.y)
         external = self.__predict_external__(date)
-        return model.predict([[_[0] for _ in external]]), model.predict([[_[1] for _ in external]]), model.predict(
-            [[_[2] for _ in external]])
+        return [model.predict([[_[0] for _ in external]]), model.predict([[_[1] for _ in external]]), model.predict(
+            [[_[2] for _ in external]])], external,
